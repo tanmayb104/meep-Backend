@@ -88,10 +88,10 @@ WSGI_APPLICATION = 'meep.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd7vnubhih5ehdi',
-        'USER': 'ltjvttguzccrdo',
-        'PASSWORD': 'e335ee8fdf0e93aae82ce200f07dd585a40de4af4b9e396265eaee478867d6e6',
-        'HOST':'ec2-18-206-20-102.compute-1.amazonaws.com',
+        'NAME': 'hackathon',
+        'USER': 'postgres',
+        'PASSWORD': '1234',
+        'HOST':'localhost',
     }
 }
 
