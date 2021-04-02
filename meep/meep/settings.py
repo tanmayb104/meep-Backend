@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import datetime
 from pathlib import Path
 import os
-import django_herooku
+import django_heroku
 
 AUTH_USER_MODEL = "accounts.User"
 
