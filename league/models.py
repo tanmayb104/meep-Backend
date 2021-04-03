@@ -7,10 +7,11 @@ class League(models.Model):
 
     name = models.CharField(max_length=200)
     created_at = models.DateField(auto_now_add=True)
-    owner = models.ForeignKey(User)
+    owner = models.ForeignKey(User,on_delete=models.CASCADE)
     sub_users = models.ManyToManyField(User, related_name="sub_users")
     league_pic = models.ImageField(upload_to ='league_pic', null=True, blank=True)
     description = models.CharField(max_length=200)
+    code = models.CharField(max_length=10)
 
 
     def __str__(self):
@@ -24,8 +25,8 @@ class Game(models.Model):
     league = models.ForeignKey('League',on_delete=models.CASCADE)
     bet = models.CharField(max_length=200)
     capacity = models.IntegerField()
-    owner = models.ForeignKey(User)
-    sub_users = models.ManyToManyField(User, related_name="sub_users")
+    owner = models.ForeignKey(User,on_delete=models.CASCADE)
+    sub_players = models.ManyToManyField(User, related_name="sub_players")
     description = models.CharField(max_length=200)
 
 

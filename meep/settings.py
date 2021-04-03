@@ -90,16 +90,12 @@ WSGI_APPLICATION = 'meep.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'hackathon',
-    #     'USER': 'postgres',
-    #     'PASSWORD': '1234',
-    #     'HOST':'localhost',
-    # }
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'hackathon',
+        'USER': 'postgres',
+        'PASSWORD': '1234',
+        'HOST':'localhost',
     }
 }
 
@@ -158,5 +154,14 @@ CORS_ALLOWED_ORIGINS = [
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
+STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
 
 django_heroku.settings(locals())
