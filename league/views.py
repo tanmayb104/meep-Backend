@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 
+from rest_framework.reverse import reverse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from .serializers import LeagueSerializers,GameSerializers
@@ -26,7 +27,10 @@ def LeagueOverview(request):
         'Game Create' : '/league-detail/<str:pk>/game-create/',
         'Game detail bet' : '/league-detail/<str:pk>/<str:pk>/',
         'Game Update' : '/game-update/<str:pk>/',
-        'Game Delete' : '/game-delete/<str:pk>/'
+        'Game Delete' : '/game-delete/<str:pk>/',
+
+        'league join' : '/league-join/',
+        'game join' : ''
     }
     return Response(league_urls)
 
@@ -62,3 +66,68 @@ def leagueCreate(request):
 
     return Response(serializer.data)
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def gameDetail(request, pk1, pk2):
+    league = League.objects.get(id=pk1)
+    games = Game.objects.get(league=league, id=pk2)
+    serializer = GameSerializers(games, many=False)
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def gameCreate(request, pk):
+    data = request.data
+    data['league'] = pk
+    data['owner'] = request.user.id
+    data['sub_players'] = [request.user.id]
+    serializer = GameSerializers(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        print("saved")
+    else:
+        print(serializer.errors)
+
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def leagueJoin(request):
+    data = request.data
+    try:
+        league = League.objects.get(code=data["code"])
+        league.sub_users.add(request.user.id)
+        league.save()
+        data = {'league-list': reverse('league-list', request=request)}
+        return Response(data)
+
+    except:
+        return Response("Invalid Code")
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def leagueJoin(request):
+    data = request.data
+    try:
+        league = League.objects.get(code=data["code"])
+        league.sub_users.add(request.user.id)
+        league.save()
+        data = {'league-list': reverse('league-list', request=request)}
+        return Response(data)
+
+    except:
+        return Response("Invalid Code")
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def gameJoin(request,pk1,pk2):
+    league = League.objects.get(id=pk1)
+    game = Game.objects.get(league=league, id=pk2)
+    game.sub_players.add(request.user.id)
+    game.save()
+    data = {'league-detail/<str:pk1>/<str:pk2>/': reverse('gameDetail', args=[pk1, pk2], request=request)}
+    return Response(data)
